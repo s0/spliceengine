@@ -338,7 +338,8 @@ public class BackupEndpointObserver extends BackupBaseRegionObserver implements 
                 Store store = region.getStore(family);
                 Collection<StoreFile> postBulkLoadStoreFiles = store.getStorefiles();
                 for (StoreFile storeFile : postBulkLoadStoreFiles) {
-                    if (Bytes.compareTo(storeFile.getMetadataValue(StoreFile.BULKLOAD_TASK_KEY), HBaseConfiguration.BULKLOAD_TASK_KEY) == 0
+                    byte[] val = storeFile.getMetadataValue(StoreFile.BULKLOAD_TASK_KEY);
+                    if (val != null && Bytes.compareTo(val, HBaseConfiguration.BULKLOAD_TASK_KEY) == 0
                             && !storeFiles.get().contains(storeFile)) {
                         BackupUtils.registerHFile(conf, fs, backupDir, region, storeFile.getPath().getName());
                     }
